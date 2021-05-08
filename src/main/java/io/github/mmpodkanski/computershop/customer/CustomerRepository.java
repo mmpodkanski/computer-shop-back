@@ -1,0 +1,13 @@
+package io.github.mmpodkanski.computershop.customer;
+
+import org.springframework.data.repository.Repository;
+
+import java.util.Optional;
+
+public interface CustomerRepository extends Repository<Customer, Integer> {
+    Optional<Customer> findById(int id); // exception
+
+    void save(Customer entity);
+
+    void delete(Customer entity);
+}

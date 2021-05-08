@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {
+      "name": "app",
+      "type": "io.github.mmpodkanski.computershop.AppConfig",
+      "sourceType": "io.github.mmpodkanski.computershop.AppConfig"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}
