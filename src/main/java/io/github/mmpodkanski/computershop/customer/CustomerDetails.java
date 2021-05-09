@@ -100,4 +100,5 @@ class CustomerDetails {
     void setCountry(final String country) {
         this.country = country;
     }
+
 }

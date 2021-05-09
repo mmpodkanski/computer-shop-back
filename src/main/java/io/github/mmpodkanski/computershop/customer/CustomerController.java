@@ -1,35 +1,52 @@
 package io.github.mmpodkanski.computershop.customer;
 
-import io.github.mmpodkanski.computershop.customer.dto.JwtResponse;
-import io.github.mmpodkanski.computershop.customer.dto.LoginRequest;
-import io.github.mmpodkanski.computershop.customer.dto.RegisterRequest;
+import io.github.mmpodkanski.computershop.customer.dto.*;
+import io.github.mmpodkanski.computershop.exception.ApiNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/customer")
 class CustomerController {
-    private final CustomerFacade service;
+    private final CustomerFacade facade;
+    private final CustomerQueryRepository queryRepository;
 
-    CustomerController(final CustomerFacade service) {
-        this.service = service;
+    CustomerController(final CustomerFacade facade, final CustomerQueryRepository queryRepository) {
+        this.facade = facade;
+        this.queryRepository = queryRepository;
+    }
+
+    @GetMapping()
+    ResponseEntity<CustomerDto> readCustomerDetails(
+            @AuthenticationPrincipal Customer customer
+    ) {
+        var result = queryRepository.findByUsername(customer.getUsername())
+                .orElseThrow(() -> new ApiNotFoundException("Customer with that username not exists!"));
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping(params = "details")
+    ResponseEntity<CustomerDetailsDto> updateCustomerDetails(
+            @AuthenticationPrincipal Customer customer,
+            @RequestBody CustomerDetailsDto details
+    ) {
+        var result = facade.addDetails(details, customer);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/login")
     ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        JwtResponse response = service.login(loginRequest);
+        JwtResponse response = facade.login(loginRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/register")
     ResponseEntity<JwtResponse> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
-        service.signup(signUpRequest);
+        facade.signup(signUpRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

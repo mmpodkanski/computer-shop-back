@@ -71,21 +71,23 @@ class ProductController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping(value = "/{id}", params = "add")
+    @PatchMapping(value = "/{id}", params = "increase")
     ResponseEntity<ProductDto> addProductToStock(
-            @PathVariable int id
+            @PathVariable int id,
+            @RequestParam(value = "increase") int quantity
     ) {
         logger.warn("Increasing stock value of product " + id);
-        productFacade.increaseProductStock(id);
+        productFacade.increaseProductStock(id, quantity);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping(value = "/{id}", params = "remove")
+    @PatchMapping(value = "/{id}", params = "decrease")
     ResponseEntity<ProductDto> removeProductFromStock(
-            @PathVariable int id
+            @PathVariable int id,
+            @RequestParam(value = "decrease") int quantity
     ) {
         logger.warn("Increasing stock value of product " + id);
-        productFacade.decreaseProductStock(id);
+        productFacade.decreaseProductStock(id, quantity);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductFactory {
-    public Product dtoToEntity(ProductDto dto) {
+    public Product toEntity(ProductDto dto) {
         return new Product(
                 dto.getId(),
                 dto.getName(),
@@ -22,7 +22,7 @@ public class ProductFactory {
         );
     }
 
-    public Product requestToEntity(ProductRequest request) {
+    public Product toEntity(ProductRequest request) {
         return new Product(
                 0,
                 request.getName(),

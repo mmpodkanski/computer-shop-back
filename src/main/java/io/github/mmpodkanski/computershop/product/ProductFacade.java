@@ -5,8 +5,8 @@ import io.github.mmpodkanski.computershop.product.dto.ProductRequest;
 import io.github.mmpodkanski.computershop.product.enums.ECategory;
 import io.github.mmpodkanski.computershop.product.enums.ECondition;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,20 +22,20 @@ public class ProductFacade {
         this.productFactory = productFactory;
     }
 
-    public ProductDto addProduct(ProductRequest product) {
+    ProductDto addProduct(ProductRequest product) {
         var condition = ECondition.valueOf(product.getCondition());
         var category = ECategory.valueOf(product.getCategory());
 
         List<Product> result = queryRepository.findAllByCode(product.getCode())
                 .stream()
-                .map(productFactory::dtoToEntity)
+                .map(productFactory::toEntity)
                 .filter(pd -> pd.getCondition().equals(condition))
                 .collect(Collectors.toList());
 
         if (result.size() > 1) {
             throw new IllegalStateException("There are more than one product with the same code...");
         } else if (result.size() == 0) {
-            return productFactory.toDto(repository.save(productFactory.requestToEntity(product)));
+            return productFactory.toDto(repository.save(productFactory.toEntity(product)));
         }
 
         var foundProduct = result.get(0);
@@ -43,7 +43,7 @@ public class ProductFacade {
             throw new IllegalStateException("You are trying add product with the same code but in other category!");
         }
 
-        foundProduct.increaseStock();
+        foundProduct.increaseStock(foundProduct.getQuantity());
         return productFactory.toDto(repository.save(foundProduct));
     }
 
@@ -68,23 +68,23 @@ public class ProductFacade {
 
 
     @Transactional
-    public void increaseProductStock(int productId) {
+    public void increaseProductStock(int productId, int quantity) {
         var result = getProduct(productId);
 
-        result.increaseStock();
+        result.increaseStock(quantity);
     }
 
     @Transactional
-    public void decreaseProductStock(int productId) {
+    public void decreaseProductStock(int productId, int quantity) {
         var result = getProduct(productId);
 
-        if (result.getQuantity() == 0) {
-            throw new IllegalStateException("Out of stock product!");
+        if (result.getQuantity() < quantity) {
+            throw new IllegalStateException("Out of stock product, we have only: " + result.getQuantity());
         }
-        result.decreaseStock();
+        result.decreaseStock(quantity);
     }
 
-    public void deleteProduct(int productId) {
+    void deleteProduct(int productId) {
         var result = getProduct(productId);
 
         repository.delete(result);
