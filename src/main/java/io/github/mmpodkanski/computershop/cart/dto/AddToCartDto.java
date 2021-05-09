@@ -1,6 +1,7 @@
 package io.github.mmpodkanski.computershop.cart.dto;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 public class AddToCartDto {
     private int id;
@@ -34,5 +35,18 @@ public class AddToCartDto {
 
     void setQuantity(final int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AddToCartDto that = (AddToCartDto) o;
+        return id == that.id && productId == that.productId && quantity == that.quantity;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productId, quantity);
     }
 }

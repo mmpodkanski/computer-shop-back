@@ -1,5 +1,8 @@
 package io.github.mmpodkanski.computershop.customer.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(as = CustomerDetailsDto.CustomerDetailsDtoImpl.class)
 public interface CustomerDetailsDto {
     static CustomerDetailsDto create(
             final int id,
@@ -28,13 +31,16 @@ public interface CustomerDetailsDto {
     String getCountry();
 
     class CustomerDetailsDtoImpl implements CustomerDetailsDto {
-        private final int id;
-        private final String gender;
-        private final String addressLine1;
-        private final String addressLine2;
-        private final String phone;
-        private final String city;
-        private final String country;
+        private int id;
+        private String gender;
+        private String addressLine1;
+        private String addressLine2;
+        private String phone;
+        private String city;
+        private String country;
+
+        public CustomerDetailsDtoImpl() {
+        }
 
         public CustomerDetailsDtoImpl(
                 final int id,

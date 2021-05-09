@@ -4,21 +4,25 @@ import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 public class ProductRequest {
     @NotBlank(message = "Name of product can not be blank!")
-    private final String name;
+    private String name;
     @NotBlank(message = "Description can not be blank!")
-    private final String description;
-    private final String code;
+    private String description;
+    private String code;
     @NotNull(message = "Please choose category!")
-    private final String category;
+    private String category;
     @NotNull(message = "Please type price of product!")
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    private final double price;
-    private final String condition;
-    private final int quantity;
-    private final String imgLogoUrl;
+    private double price;
+    private String condition;
+    private int quantity;
+    private String imgLogoUrl;
+
+    ProductRequest() {
+    }
 
     ProductRequest(
             @NotBlank final String name,
@@ -70,5 +74,18 @@ public class ProductRequest {
 
     public String getImgLogoUrl() {
         return imgLogoUrl;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductRequest that = (ProductRequest) o;
+        return Double.compare(that.price, price) == 0 && quantity == that.quantity && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(code, that.code) && Objects.equals(category, that.category) && Objects.equals(condition, that.condition) && Objects.equals(imgLogoUrl, that.imgLogoUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, code, category, price, condition, quantity, imgLogoUrl);
     }
 }

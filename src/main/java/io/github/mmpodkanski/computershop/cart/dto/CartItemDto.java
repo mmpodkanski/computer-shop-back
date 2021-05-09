@@ -1,6 +1,7 @@
 package io.github.mmpodkanski.computershop.cart.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.mmpodkanski.computershop.customer.dto.CustomerDto;
 import io.github.mmpodkanski.computershop.product.dto.ProductDto;
 
 import java.util.Calendar;
@@ -8,17 +9,17 @@ import java.util.Calendar;
 public interface CartItemDto {
     static CartItemDto create(
             final int id,
-            final int customerId,
+            final CustomerDto customer,
             final ProductDto productDto,
             final int quantity
 
     ) {
-        return new CartItemDto.CartItemDtoImpl(id, customerId, productDto, quantity);
+        return new CartItemDto.CartItemDtoImpl(id, customer, productDto, quantity);
     }
 
     int getId();
 
-    int getCustomerId();
+    CustomerDto getCustomer();
 
     ProductDto getProduct();
 
@@ -29,13 +30,13 @@ public interface CartItemDto {
 
     class CartItemDtoImpl implements CartItemDto {
         private final int id;
-        private final int customerId;
+        private final CustomerDto customer;
         private final ProductDto productDto;
         private final int quantity;
 
-        public CartItemDtoImpl(final int id, final int customerId, final ProductDto productDto, final int quantity) {
+        public CartItemDtoImpl(final int id, final CustomerDto customer, final ProductDto productDto, final int quantity) {
             this.id = id;
-            this.customerId = customerId;
+            this.customer = customer;
             this.productDto = productDto;
             this.quantity = quantity;
         }
@@ -46,8 +47,8 @@ public interface CartItemDto {
         }
 
         @Override
-        public int getCustomerId() {
-            return customerId;
+        public CustomerDto getCustomer() {
+            return customer;
         }
 
         @Override
