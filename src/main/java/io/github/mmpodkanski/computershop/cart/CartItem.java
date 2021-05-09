@@ -1,5 +1,6 @@
 package io.github.mmpodkanski.computershop.cart;
 
+import io.github.mmpodkanski.computershop.customer.Customer;
 import io.github.mmpodkanski.computershop.product.Product;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,7 +15,8 @@ class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int customerId;
+    @OneToOne
+    private Customer customer;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -34,11 +36,11 @@ class CartItem {
     public CartItem(
             final Product product,
             final int quantity,
-            final int customerId
+            final Customer customer
     ) {
         this.product = product;
         this.quantity = quantity;
-        this.customerId = customerId;
+        this.customer = customer;
     }
 
     public int getId() {
@@ -49,12 +51,12 @@ class CartItem {
         this.id = id;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    void setCustomerId(final int customerId) {
-        this.customerId = customerId;
+    void setCustomer(final Customer customer) {
+        this.customer = customer;
     }
 
     public Product getProduct() {

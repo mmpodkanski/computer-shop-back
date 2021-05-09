@@ -29,7 +29,7 @@ class CartController {
 
     @GetMapping
     ResponseEntity<CartDto> readAllCart(@AuthenticationPrincipal Customer customer) {
-        List<CartItemDto> cartList = queryRepository.findAllByCustomerIdOrderByCreatedAtDesc(customer.getId());
+        List<CartItemDto> cartList = queryRepository.findAllByCustomerOrderByCreatedAtDesc(customer);
 
         var result = new CartDto(cartList, cartList.stream().map(cart -> {
             double price = cart.getProduct().getPrice();
@@ -44,7 +44,7 @@ class CartController {
             @Valid @RequestBody AddToCartDto addCartDto,
             @AuthenticationPrincipal Customer customer
     ) {
-        var result = facade.addToCart(addCartDto, customer.getId());
+        var result = facade.addToCart(addCartDto, customer);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -54,7 +54,7 @@ class CartController {
             @AuthenticationPrincipal Customer customer,
             @PathVariable int id
     ) {
-        facade.updateCartItem(addToCartDto, id, customer.getId());
+        facade.updateCartItem(addToCartDto, id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -63,7 +63,7 @@ class CartController {
             @AuthenticationPrincipal Customer customer,
             @PathVariable int id
     ) {
-        facade.deleteCartItem(id, customer.getId());
+        facade.deleteCartItem(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -71,7 +71,7 @@ class CartController {
     ResponseEntity<Void> deleteAllCarts(
             @AuthenticationPrincipal Customer customer
     ) {
-        facade.deleteCartItems(customer.getId());
+        facade.deleteCartItems(customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,13 +1,14 @@
 package io.github.mmpodkanski.computershop.cart;
 
+import io.github.mmpodkanski.computershop.customer.Customer;
 import org.springframework.data.repository.Repository;
 
 interface CartItemRepository extends Repository<CartItem, Integer> {
-    CartItem findByIdAndCustomerId(int id, int userId); //*
+    CartItem findByIdAndCustomer(int id, Customer customer); //*
 
     CartItem save(CartItem entity);
 
-    void deleteByIdAndCustomerId(int id, int userId);
+    void deleteByIdAndCustomer(int id, Customer customer);
 
-    void deleteAllByCustomerId(int id);
+    void deleteAllByCustomer(Customer customer);
 }
