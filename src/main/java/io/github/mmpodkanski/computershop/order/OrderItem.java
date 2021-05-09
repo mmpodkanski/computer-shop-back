@@ -1,5 +1,6 @@
 package io.github.mmpodkanski.computershop.order;
 
+import io.github.mmpodkanski.computershop.product.Product;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -14,6 +15,8 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @OneToOne
+    private Product product;
     @NotNull
     private int quantity;
     @NotNull
@@ -30,8 +33,9 @@ public class OrderItem {
     protected OrderItem() {
     }
 
-    public OrderItem(final int quantity, final double price) {
+    public OrderItem(final int quantity, final Product product, final double price) {
         this.quantity = quantity;
+        this.product = product;
         this.price = price;
     }
 
@@ -49,6 +53,14 @@ public class OrderItem {
 
     void setQuantity(final int quantity) {
         this.quantity = quantity;
+    }
+
+    Product getProduct() {
+        return product;
+    }
+
+    void setProduct(final Product product) {
+        this.product = product;
     }
 
     double getPrice() {

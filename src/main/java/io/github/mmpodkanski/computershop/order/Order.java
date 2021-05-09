@@ -1,6 +1,7 @@
 package io.github.mmpodkanski.computershop.order;
 
 import io.github.mmpodkanski.computershop.customer.Customer;
+import io.github.mmpodkanski.computershop.order.enums.EOrderStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -16,10 +17,19 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private double totalCost;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<OrderItem> items;
     @ManyToOne
     private Customer customer;
+    @Enumerated(EnumType.STRING)
+    private EOrderStatus status;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar createdAt;
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar updatedAt;
 
     @PersistenceConstructor
     protected Order() {
@@ -29,22 +39,17 @@ public class Order {
             final double totalCost,
             final Set<OrderItem> items,
             final Customer customer,
-            final Calendar createdAt,
-            final Calendar updatedAt
+            final EOrderStatus status
     ) {
         this.totalCost = totalCost;
         this.items = items;
         this.customer = customer;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.status = status;
     }
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar createdAt;
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar updatedAt;
+    void cancelOrder() {
+        this.status = EOrderStatus.CANCELLED;
+    }
 
     int getId() {
         return id;
@@ -92,5 +97,13 @@ public class Order {
 
     void setUpdatedAt(final Calendar updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    EOrderStatus getStatus() {
+        return status;
+    }
+
+    void setStatus(final EOrderStatus status) {
+        this.status = status;
     }
 }
