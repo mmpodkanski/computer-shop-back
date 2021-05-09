@@ -31,7 +31,7 @@ public class Customer implements UserDetails {
     private ERole role;
     private boolean locked = false;
     private boolean enabled;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private CustomerDetails details;
 
     @CreationTimestamp
@@ -102,5 +102,13 @@ public class Customer implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public CustomerDetails getDetails() {
+        return details;
+    }
+
+    void setDetails(final CustomerDetails details) {
+        this.details = details;
     }
 }
