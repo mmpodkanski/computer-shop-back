@@ -69,13 +69,17 @@ public class Product {
         this.imgLogoUrl = imgLogoUrl;
     }
 
-    public void increaseStock() {
-        quantity++;
+    public void increaseStock(int q) {
+        for (int i=0; i<q; i++) {
+            quantity++;
+        }
     }
 
-    public void decreaseStock() {
-        if (quantity > 0) {
-            quantity--;
+    public void decreaseStock(int q) {
+        for (int i=0; i<q; i++) {
+            if (quantity > 0) {
+                quantity--;
+            }
         }
     }
 
