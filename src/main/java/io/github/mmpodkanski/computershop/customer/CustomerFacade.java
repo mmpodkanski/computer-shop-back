@@ -83,7 +83,7 @@ public class CustomerFacade {
 
     // TODO: change update method, "SET" variable is a bad idea
     CustomerDetailsDto addDetails(CustomerDetailsDto dto, Customer customer) {
-        var details = factory.toEntity(dto, customer);
+        var details = factory.toEntity(dto);
 
         if (customer.getDetails() != null) {
             details.setId(customer.getDetails().getId());

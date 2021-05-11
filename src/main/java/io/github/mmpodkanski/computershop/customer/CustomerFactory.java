@@ -16,19 +16,19 @@ public class CustomerFactory {
         );
     }
 
-    public CustomerDetailsDto toDto(CustomerDetails customer) {
+    public CustomerDetailsDto toDto(CustomerDetails entity) {
         return CustomerDetailsDto.create(
-                customer.getId(),
-                customer.getGender().toString(),
-                customer.getAddressLine1(),
-                customer.getAddressLine2(),
-                customer.getPhone(),
-                customer.getCity(),
-                customer.getCountry()
+                entity.getId(),
+                entity.getGender().toString(),
+                entity.getAddressLine1(),
+                entity.getAddressLine2(),
+                entity.getPhone(),
+                entity.getCity(),
+                entity.getCountry()
         );
     }
 
-    public CustomerDetails toEntity(CustomerDetailsDto dto, Customer customer) {
+    CustomerDetails toEntity(CustomerDetailsDto dto) {
         return new CustomerDetails(
                 EGender.valueOf(dto.getGender()),
                 dto.getAddressLine1(),
