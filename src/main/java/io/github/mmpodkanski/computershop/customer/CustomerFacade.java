@@ -6,13 +6,13 @@ import io.github.mmpodkanski.computershop.customer.dto.JwtResponse;
 import io.github.mmpodkanski.computershop.customer.dto.LoginRequest;
 import io.github.mmpodkanski.computershop.customer.dto.RegisterRequest;
 import io.github.mmpodkanski.computershop.customer.enums.ERole;
+import io.github.mmpodkanski.computershop.exception.ApiBadRequestException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -42,10 +42,10 @@ public class CustomerFacade {
 
     void signup(final RegisterRequest signUpRequest) {
         if (queryRepository.existsByUsername(signUpRequest.getUsername())) {
-            throw new IllegalStateException("Username is already taken!");
+            throw new ApiBadRequestException("Username is already taken!");
         }
         if (queryRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new IllegalStateException("Email is already in use!");
+            throw new ApiBadRequestException("Email is already in use!");
         }
 
         var user = new Customer(
