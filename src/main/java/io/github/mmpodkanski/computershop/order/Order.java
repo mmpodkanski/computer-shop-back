@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -35,7 +35,7 @@ public class Order {
     protected Order() {
     }
 
-    public Order(
+    Order(
             final double totalCost,
             final Set<OrderItem> items,
             final Customer customer,

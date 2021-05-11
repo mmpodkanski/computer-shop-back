@@ -9,25 +9,17 @@ import io.github.mmpodkanski.computershop.cart.CartItemQueryRepository;
 import io.github.mmpodkanski.computershop.cart.dto.CartDto;
 import io.github.mmpodkanski.computershop.cart.dto.CartItemDto;
 import io.github.mmpodkanski.computershop.customer.Customer;
-import io.github.mmpodkanski.computershop.customer.CustomerFactory;
 import io.github.mmpodkanski.computershop.exception.ApiBadRequestException;
 import io.github.mmpodkanski.computershop.exception.ApiNotFoundException;
 import io.github.mmpodkanski.computershop.order.dto.OrderDto;
 import io.github.mmpodkanski.computershop.order.dto.OrderItemDto;
 import io.github.mmpodkanski.computershop.order.enums.EOrderStatus;
-import io.github.mmpodkanski.computershop.product.ProductFacade;
-import io.github.mmpodkanski.computershop.product.ProductFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,10 +27,8 @@ class OrderFacade {
     private final OrderRepository repository;
     private final OrderQueryRepository queryRepository;
     private final CartItemQueryRepository cartItemQueryRepository;
-    private final CustomerFactory customerFactory;
+    private final OrderFactory orderFactory;
     private final CartFacade facade;
-    private final ProductFactory productFactory;
-    private final ProductFacade productFacade;
 
     @Value("${BASE_URL}")
     private String baseURL;
@@ -50,18 +40,14 @@ class OrderFacade {
             final OrderRepository repository,
             final OrderQueryRepository queryRepository,
             final CartItemQueryRepository cartItemQueryRepository,
-            final CustomerFactory customerFactory,
-            final CartFacade facade,
-            final ProductFactory productFactory,
-            final ProductFacade productFacade
+            final OrderFactory orderFactory,
+            final CartFacade facade
     ) {
         this.repository = repository;
         this.queryRepository = queryRepository;
         this.cartItemQueryRepository = cartItemQueryRepository;
-        this.customerFactory = customerFactory;
+        this.orderFactory = orderFactory;
         this.facade = facade;
-        this.productFactory = productFactory;
-        this.productFacade = productFacade;
     }
 
     OrderDto placeOrder(Customer customer) {
@@ -83,11 +69,10 @@ class OrderFacade {
                         }).reduce(0.0, Double::sum)
                 );
 
-        var orderItems = cart.getCarts().stream().map(item -> new OrderItem(
-                item.getQuantity(),
-                productFactory.toEntity(item.getProduct()),
-                item.getProduct().getPrice()
-        )).collect(Collectors.toSet());
+        var orderItems = cart.getCarts().stream().map(item -> {
+            var orderItemDto = OrderItemDto.create(0, item.getQuantity(), item.getProduct().getPrice(), item.getProduct());
+            return orderFactory.toNewEntity(orderItemDto);
+        }).collect(Collectors.toSet());
 
         facade.deleteCartItems(customer);
         var order = repository.save(new Order(
@@ -98,7 +83,7 @@ class OrderFacade {
         ));
 //        orderItems.forEach(item -> productFacade.decreaseProductStock(item.getProduct().getId(), item.getQuantity()));
 
-        return Dto(order);
+        return orderFactory.toDto(order);
     }
 
     @Transactional
@@ -156,22 +141,5 @@ class OrderFacade {
                 .build();
     }
 
-    private OrderDto Dto(Order entity) {
-        return OrderDto.create(
-                entity.getId(),
-                entity.getTotalCost(),
-                entity.getItems().stream().map(this::Dto).collect(Collectors.toSet()),
-                customerFactory.toDto(entity.getCustomer()),
-                entity.getStatus().toString()
-        );
-    }
 
-    private OrderItemDto Dto(OrderItem entity) {
-        return OrderItemDto.create(
-                entity.getId(),
-                entity.getQuantity(),
-                entity.getPrice(),
-                productFactory.toDto(entity.getProduct())
-        );
-    }
 }

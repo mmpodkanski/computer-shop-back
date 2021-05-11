@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 @Entity
 @Table(name = "order_items")
-public class OrderItem {
+class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -33,7 +33,7 @@ public class OrderItem {
     protected OrderItem() {
     }
 
-    public OrderItem(final int quantity, final Product product, final double price) {
+    OrderItem(final int quantity, final Product product, final double price) {
         this.quantity = quantity;
         this.product = product;
         this.price = price;
