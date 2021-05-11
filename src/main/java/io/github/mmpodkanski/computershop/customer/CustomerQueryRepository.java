@@ -15,5 +15,7 @@ public interface CustomerQueryRepository extends Repository<Customer, Integer> {
 
     List<CustomerDto> findAllBy();
 
-    Optional<CustomerDto> findByUsername(String username);
+    Optional<Customer> findByUsername(String username);
+
+    Optional<CustomerDto> findDtoByUsername(String username);
 }

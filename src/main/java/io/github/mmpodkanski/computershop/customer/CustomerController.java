@@ -24,7 +24,7 @@ class CustomerController {
     ResponseEntity<CustomerDto> readCustomerDetails(
             @AuthenticationPrincipal Customer customer
     ) {
-        var result = queryRepository.findByUsername(customer.getUsername())
+        var result = queryRepository.findDtoByUsername(customer.getUsername())
                 .orElseThrow(() -> new ApiNotFoundException("Customer with that username not exists!"));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
