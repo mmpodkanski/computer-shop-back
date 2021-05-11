@@ -33,7 +33,7 @@ class CartItem {
     protected CartItem() {
     }
 
-    public CartItem(
+    CartItem(
             final Product product,
             final int quantity,
             final Customer customer

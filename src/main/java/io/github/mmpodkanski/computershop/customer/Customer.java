@@ -42,7 +42,7 @@ public class Customer implements UserDetails {
     protected Customer() {
     }
 
-    public Customer(final String email, final String username, final String password, final ERole role) {
+    Customer(final String email, final String username, final String password, final ERole role) {
         this.email = email;
         this.username = username;
         this.password = password;

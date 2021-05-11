@@ -9,12 +9,12 @@ import java.util.Calendar;
 public interface CartItemDto {
     static CartItemDto create(
             final int id,
-            final CustomerDto customer,
+            final CustomerDto customerDto,
             final ProductDto productDto,
             final int quantity
 
     ) {
-        return new CartItemDto.CartItemDtoImpl(id, customer, productDto, quantity);
+        return new CartItemDto.CartItemDtoImpl(id, customerDto, productDto, quantity);
     }
 
     int getId();
@@ -30,13 +30,13 @@ public interface CartItemDto {
 
     class CartItemDtoImpl implements CartItemDto {
         private final int id;
-        private final CustomerDto customer;
+        private final CustomerDto customerDto;
         private final ProductDto productDto;
         private final int quantity;
 
-        public CartItemDtoImpl(final int id, final CustomerDto customer, final ProductDto productDto, final int quantity) {
+        public CartItemDtoImpl(final int id, final CustomerDto customerDto, final ProductDto productDto, final int quantity) {
             this.id = id;
-            this.customer = customer;
+            this.customerDto = customerDto;
             this.productDto = productDto;
             this.quantity = quantity;
         }
@@ -48,7 +48,7 @@ public interface CartItemDto {
 
         @Override
         public CustomerDto getCustomer() {
-            return customer;
+            return customerDto;
         }
 
         @Override

@@ -29,7 +29,7 @@ class CustomerDetails {
     protected CustomerDetails() {
     }
 
-    public CustomerDetails(
+    CustomerDetails(
             final EGender gender,
             final String addressLine1,
             final String addressLine2,

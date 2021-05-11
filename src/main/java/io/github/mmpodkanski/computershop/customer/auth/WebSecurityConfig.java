@@ -1,5 +1,6 @@
 package io.github.mmpodkanski.computershop.customer.auth;
 
+import io.github.mmpodkanski.computershop.customer.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;

@@ -1,5 +1,6 @@
 package io.github.mmpodkanski.computershop.customer.auth;
 
+import io.github.mmpodkanski.computershop.customer.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
