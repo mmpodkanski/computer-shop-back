@@ -10,4 +10,6 @@ public interface CartItemQueryRepository extends Repository<CartItem, Integer> {
     boolean existsById(int id);
 
     List<CartItemDto> findAllByCustomerOrderByCreatedAtDesc(Customer customer);
+
+    CartItem findByIdAndCustomer(int cartId, Customer customer);
 }

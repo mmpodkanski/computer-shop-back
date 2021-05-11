@@ -4,7 +4,7 @@ import io.github.mmpodkanski.computershop.customer.Customer;
 import org.springframework.data.repository.Repository;
 
 interface CartItemRepository extends Repository<CartItem, Integer> {
-    CartItem findByIdAndCustomer(int id, Customer customer); //*
+    CartItem findById(int id);
 
     CartItem save(CartItem entity);
 
