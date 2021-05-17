@@ -4,7 +4,7 @@ import com.stripe.exception.StripeException;
 import io.github.mmpodkanski.computershop.customer.Customer;
 import io.github.mmpodkanski.computershop.exception.ApiNotFoundException;
 import io.github.mmpodkanski.computershop.order.dto.OrderDto;
-import io.github.mmpodkanski.computershop.order.dto.checkout.StripeResponse;
+import io.github.mmpodkanski.computershop.order.dto.checkout.StripeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -50,11 +50,17 @@ class OrderController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/checkout", params = "id")
-    public ResponseEntity<StripeResponse> checkoutList(@RequestParam("id") int orderId) throws StripeException {
+    @PostMapping(value = "/checkout", params = "orderId")
+    ResponseEntity<StripeDto> createCheckout(@RequestParam int orderId) throws StripeException {
         var result = facade.createSession(orderId);
-        var response = new StripeResponse(result.getId());
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        var response = new StripeDto(result.getId());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "/check-session", params = "orderId")
+    ResponseEntity<Void> checkSession(@RequestParam int orderId) throws StripeException {
+        facade.checkSession(orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{id}")

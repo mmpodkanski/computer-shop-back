@@ -1,7 +1,10 @@
 package io.github.mmpodkanski.computershop.order.dto.checkout;
 
-public class StripeResponse {
+public class StripeDto {
     private String sessionId;
+
+    public StripeDto() {
+    }
 
     public String getSessionId() {
         return sessionId;
@@ -11,10 +14,7 @@ public class StripeResponse {
         this.sessionId = sessionId;
     }
 
-    public StripeResponse(String sessionId) {
+    public StripeDto(String sessionId) {
         this.sessionId = sessionId;
-    }
-
-    public StripeResponse() {
     }
 }

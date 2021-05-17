@@ -14,6 +14,7 @@ import io.github.mmpodkanski.computershop.exception.ApiNotFoundException;
 import io.github.mmpodkanski.computershop.order.dto.OrderDto;
 import io.github.mmpodkanski.computershop.order.dto.OrderItemDto;
 import io.github.mmpodkanski.computershop.order.enums.EOrderStatus;
+import io.github.mmpodkanski.computershop.product.ProductFacade;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ class OrderFacade {
     private final OrderQueryRepository queryRepository;
     private final CartItemQueryRepository cartItemQueryRepository;
     private final OrderFactory orderFactory;
+    private final ProductFacade productFacade;
     private final CartFacade facade;
 
     @Value("${BASE_URL}")
@@ -41,12 +43,14 @@ class OrderFacade {
             final OrderQueryRepository queryRepository,
             final CartItemQueryRepository cartItemQueryRepository,
             final OrderFactory orderFactory,
+            final ProductFacade productFacade,
             final CartFacade facade
     ) {
         this.repository = repository;
         this.queryRepository = queryRepository;
         this.cartItemQueryRepository = cartItemQueryRepository;
         this.orderFactory = orderFactory;
+        this.productFacade = productFacade;
         this.facade = facade;
     }
 
@@ -81,7 +85,6 @@ class OrderFacade {
                 customer,
                 EOrderStatus.PENDING
         ));
-//        orderItems.forEach(item -> productFacade.decreaseProductStock(item.getProduct().getId(), item.getQuantity()));
 
         return orderFactory.toDto(order);
     }
@@ -97,30 +100,56 @@ class OrderFacade {
         }
 
         repository.findById(id).ifPresent(Order::cancelOrder);
-//        order.getItems().forEach(item -> productFacade.increaseProductStock(item.getProduct().getId(), item.getQuantity()));
     }
 
-    Session createSession(int orderId) throws StripeException {
+    @Transactional
+    public Session createSession(int orderId) throws StripeException {
         var order = repository.findById(orderId)
                 .orElseThrow(() -> new ApiNotFoundException("Order not found!"));
 
         if (!order.getStatus().equals(EOrderStatus.PENDING)) {
-            throw new ApiBadRequestException("Orders status is: " + order.getStatus().toString());
+            throw new ApiBadRequestException("Order status is: " + order.getStatus().toString());
         }
         List<SessionCreateParams.LineItem> sessionItemsList = new ArrayList<>();
 
-        String successURL = baseURL + "payment/success";
-        String failedURL = baseURL + "payment/failed";
+        String successURL = baseURL + "payment/success?orderId=" + orderId;
+        String failedURL = baseURL + "payment/failed?orderId="+ orderId;
         Stripe.apiKey = apiKey;
 
         order.getItems().forEach(e -> sessionItemsList.add(createSessionLineItem(e)));
-        return Session.create(SessionCreateParams.builder()
+        var session = Session.create(SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setCancelUrl(failedURL)
+                .setClientReferenceId(String.valueOf(order.getCustomer().getId()))
                 .addAllLineItem(sessionItemsList)
                 .setSuccessUrl(successURL)
                 .build());
+
+        order.setPaymentId(session.getId());
+
+        return session;
+    }
+
+    @Transactional
+    public void checkSession(int orderId) throws StripeException {
+        Stripe.apiKey = apiKey;
+        var order = repository.findById(orderId)
+                .orElseThrow(() -> new ApiNotFoundException("Order with that id not exists: " + orderId));
+
+        var session = Session.retrieve(order.getPaymentId());
+        var paymentStatus = session.getPaymentStatus();
+
+        switch (paymentStatus) {
+            case ("unpaid"):
+                order.setStatus(EOrderStatus.CANCELLED);
+                break;
+            case ("paid"):
+                order.setStatus(EOrderStatus.PAID);
+                var items = order.getItems();
+                items.forEach(item -> productFacade.decreaseProductStock(item.getProduct().getId(), item.getQuantity()));
+                break;
+        }
     }
 
     private SessionCreateParams.LineItem.PriceData createPriceData(OrderItem item) {
@@ -140,6 +169,7 @@ class OrderFacade {
                 .setQuantity(Long.parseLong(String.valueOf(item.getQuantity())))
                 .build();
     }
+
 
 
 }

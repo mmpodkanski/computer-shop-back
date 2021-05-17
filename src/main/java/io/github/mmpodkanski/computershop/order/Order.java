@@ -23,6 +23,7 @@ class Order {
     private Customer customer;
     @Enumerated(EnumType.STRING)
     private EOrderStatus status;
+    private String paymentId;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -105,5 +106,13 @@ class Order {
 
     void setStatus(final EOrderStatus status) {
         this.status = status;
+    }
+
+    String getPaymentId() {
+        return paymentId;
+    }
+
+    void setPaymentId(final String paymentId) {
+        this.paymentId = paymentId;
     }
 }
