@@ -4,6 +4,7 @@ import io.github.mmpodkanski.computershop.customer.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -73,10 +74,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcCo
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-//                .antMatchers(HttpMethod.GET,  "/movies", "/api/news").permitAll()
-//                .antMatchers(  "/auth/**").permitAll()
-//                .anyRequest().authenticated();
-                .anyRequest().permitAll();
+                .antMatchers(HttpMethod.GET,  "/products/**").permitAll()
+                .antMatchers(  "/customer/**").permitAll()
+                .antMatchers(  "/cart").permitAll()
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
