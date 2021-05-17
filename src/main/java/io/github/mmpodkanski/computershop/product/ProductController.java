@@ -1,10 +1,13 @@
 package io.github.mmpodkanski.computershop.product;
 
+import io.github.mmpodkanski.computershop.exception.ApiNotFoundException;
 import io.github.mmpodkanski.computershop.product.dto.ProductDto;
 import io.github.mmpodkanski.computershop.product.dto.ProductRequest;
 import io.github.mmpodkanski.computershop.product.enums.ECategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,25 +27,29 @@ class ProductController {
         this.queryRepository = queryRepository;
     }
 
-    @GetMapping
-    ResponseEntity<List<ProductDto>> readAllProducts() {
+    @GetMapping()
+    ResponseEntity<List<ProductDto>> readAllProducts(@RequestParam(required = false, defaultValue = "0") int page) {
         logger.info("Displaying all the products!");
-        var products = queryRepository.findAllDtoBy();
+        var products = queryRepository
+                .findDtoAllBy(PageRequest.of(
+                                page, 9,
+                                Sort.by("quantity").ascending().and(Sort.by("price")).ascending()
+                ));
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping(params = "category")
     ResponseEntity<List<ProductDto>> readAllProductsByCategory(@RequestParam String stringCategory) {
-        logger.info("Displaying products by category!");
+        logger.info("Displaying products by category: " + stringCategory);
         var category = ECategory.valueOf(stringCategory);
-        var products = queryRepository.findAllDtoByCategory(category);
+        var products = queryRepository.findDtoAllByCategory(category);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping(params = "code")
-    ResponseEntity<List<ProductDto>> readAllProductByCode(@RequestParam String code) {
-        logger.info("Displaying product!");
-        var product = queryRepository.findAllDtoByCode(code);
+    @GetMapping(params = "name")
+    ResponseEntity<List<ProductDto>> readAllProductByName(@RequestParam String name) {
+        logger.info("Displaying products by name: " + name);
+        var product = queryRepository.findAllDtoByNameContaining(name);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -50,7 +57,7 @@ class ProductController {
     ResponseEntity<ProductDto> readProductById(@PathVariable int id) {
         logger.info("Displaying product!");
         var product = queryRepository.findDtoById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Product with that id not exists: " + id));
+                .orElseThrow(() -> new ApiNotFoundException("Product with that id not exists: " + id));
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -67,8 +74,8 @@ class ProductController {
             @PathVariable int id
     ) {
         logger.warn("Updating product with id: " + id);
-        productFacade.updateProduct(product, id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        var result = productFacade.updateProduct(product, id);
+        return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping(value = "/{id}", params = "increase")
@@ -96,6 +103,5 @@ class ProductController {
         productFacade.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 }

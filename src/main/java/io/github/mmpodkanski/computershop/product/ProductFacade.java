@@ -1,5 +1,7 @@
 package io.github.mmpodkanski.computershop.product;
 
+import io.github.mmpodkanski.computershop.exception.ApiBadRequestException;
+import io.github.mmpodkanski.computershop.exception.ApiNotFoundException;
 import io.github.mmpodkanski.computershop.product.dto.ProductDto;
 import io.github.mmpodkanski.computershop.product.dto.ProductRequest;
 import io.github.mmpodkanski.computershop.product.enums.ECategory;
@@ -28,27 +30,24 @@ public class ProductFacade {
 
         List<Product> result = queryRepository.findAllByCode(product.getCode())
                 .stream()
-                .map(productFactory::toEntity)
                 .filter(pd -> pd.getCondition().equals(condition))
                 .collect(Collectors.toList());
 
         if (result.size() > 1) {
-            throw new IllegalStateException("There are more than one product with the same code...");
+            throw new ApiBadRequestException("There is more than one product with the same code...");
         } else if (result.size() == 0) {
             return productFactory.toDto(repository.save(productFactory.toEntity(product)));
         }
 
         var foundProduct = result.get(0);
         if (!foundProduct.getCategory().equals(category)) {
-            throw new IllegalStateException("You are trying add product with the same code but in other category!");
+            throw new ApiBadRequestException("You are trying add product with the same code but in other category!");
         }
 
-        foundProduct.increaseStock(foundProduct.getQuantity());
-        return productFactory.toDto(repository.save(foundProduct));
+        return updateProduct(product, foundProduct.getId());
     }
 
-    @Transactional
-    public void updateProduct(ProductRequest request, int productId) {
+    ProductDto updateProduct(ProductRequest request, int productId) {
         var product = getProduct(productId);
 
         var condition = ECondition.valueOf(request.getCondition());
@@ -64,6 +63,8 @@ public class ProductFacade {
                 request.getQuantity() == 0 ? 1 : request.getQuantity(),
                 request.getImgLogoUrl()
         );
+
+        return productFactory.toDto(repository.save(product));
     }
 
 
@@ -79,7 +80,7 @@ public class ProductFacade {
         var result = getProduct(productId);
 
         if (result.getQuantity() < quantity) {
-            throw new IllegalStateException("Out of stock product, we have only: " + result.getQuantity());
+            throw new ApiBadRequestException("Out of stock product, we have only: " + result.getQuantity());
         }
         result.decreaseStock(quantity);
     }
@@ -92,6 +93,6 @@ public class ProductFacade {
 
     private Product getProduct(final int productId) {
         return repository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product with that id not exists!: " + productId));
+                .orElseThrow(() -> new ApiNotFoundException("Product with that id not exists!: " + productId));
     }
 }

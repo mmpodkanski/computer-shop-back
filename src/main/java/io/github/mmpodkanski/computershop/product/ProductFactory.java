@@ -31,7 +31,7 @@ public class ProductFactory {
                 ECategory.valueOf(request.getCategory()),
                 request.getPrice(),
                 ECondition.valueOf(request.getCondition()),
-                request.getQuantity(),
+                request.getQuantity() == 0 ? 1 : request.getQuantity(),
                 request.getImgLogoUrl()
         );
     }
