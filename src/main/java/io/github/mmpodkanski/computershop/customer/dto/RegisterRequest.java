@@ -22,7 +22,7 @@ public class RegisterRequest {
     protected RegisterRequest() {
     }
 
-    public RegisterRequest(final String email, final String username, final String password) {
+    public RegisterRequest(@NotBlank final String email, @NotBlank final String username, @NotBlank final String password) {
         this.email = email;
         this.username = username;
         this.password = password;

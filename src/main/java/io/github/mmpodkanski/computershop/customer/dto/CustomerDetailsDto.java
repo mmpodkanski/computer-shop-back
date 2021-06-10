@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public interface CustomerDetailsDto {
     static CustomerDetailsDto create(
             final int id,
+            final String firstName,
+            final String lastName,
             final String gender,
             final String addressLine1,
             final String addressLine2,
@@ -13,10 +15,14 @@ public interface CustomerDetailsDto {
             final String city,
             final String country
     ) {
-        return new CustomerDetailsDtoImpl(id, gender, addressLine1, addressLine2, phone, city, country);
+        return new CustomerDetailsDtoImpl(id, firstName, lastName, gender, addressLine1, addressLine2, phone, city, country);
     }
 
     int getId();
+
+    String getFirstName();
+
+    String getLastName();
 
     String getGender();
 
@@ -32,6 +38,8 @@ public interface CustomerDetailsDto {
 
     class CustomerDetailsDtoImpl implements CustomerDetailsDto {
         private int id;
+        private String firstName;
+        private String lastName;
         private String gender;
         private String addressLine1;
         private String addressLine2;
@@ -44,6 +52,8 @@ public interface CustomerDetailsDto {
 
         public CustomerDetailsDtoImpl(
                 final int id,
+                final String firstName,
+                final String lastName,
                 final String gender,
                 final String addressLine1,
                 final String addressLine2,
@@ -53,6 +63,8 @@ public interface CustomerDetailsDto {
         ) {
             this.id = id;
             this.gender = gender;
+            this.firstName = firstName;
+            this.lastName = lastName;
             this.addressLine1 = addressLine1;
             this.addressLine2 = addressLine2;
             this.phone = phone;
@@ -64,6 +76,16 @@ public interface CustomerDetailsDto {
         @Override
         public int getId() {
             return id;
+        }
+
+        @Override
+        public String getFirstName() {
+            return firstName;
+        }
+
+        @Override
+        public String getLastName() {
+            return lastName;
         }
 
         @Override
