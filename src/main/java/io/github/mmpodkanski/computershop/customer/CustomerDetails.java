@@ -13,6 +13,8 @@ class CustomerDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String firstName;
+    private String lastName;
     @Enumerated(EnumType.STRING)
     private EGender gender;
     @NotBlank(message = "Please type an address!")
@@ -30,6 +32,8 @@ class CustomerDetails {
     }
 
     CustomerDetails(
+            final String firstName,
+            final String lastName,
             final EGender gender,
             final String addressLine1,
             final String addressLine2,
@@ -37,6 +41,8 @@ class CustomerDetails {
             final String city,
             final String country
     ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -51,6 +57,22 @@ class CustomerDetails {
 
     void setId(final int id) {
         this.id = id;
+    }
+
+    String getFirstName() {
+        return firstName;
+    }
+
+    void setFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    String getLastName() {
+        return lastName;
+    }
+
+    void setLastName(final String lastName) {
+        this.lastName = lastName;
     }
 
     EGender getGender() {

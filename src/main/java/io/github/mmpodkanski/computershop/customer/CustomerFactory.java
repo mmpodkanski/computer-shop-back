@@ -12,13 +12,15 @@ public class CustomerFactory {
           entity.getId(),
           entity.getUsername(),
           entity.getEmail(),
-          toDto(entity.getDetails())
+          entity.getDetails() == null ? null : toDto(entity.getDetails())
         );
     }
 
-    public CustomerDetailsDto toDto(CustomerDetails entity) {
+    CustomerDetailsDto toDto(CustomerDetails entity) {
         return CustomerDetailsDto.create(
                 entity.getId(),
+                entity.getFirstName(),
+                entity.getLastName(),
                 entity.getGender().toString(),
                 entity.getAddressLine1(),
                 entity.getAddressLine2(),
@@ -30,6 +32,8 @@ public class CustomerFactory {
 
     CustomerDetails toEntity(CustomerDetailsDto dto) {
         return new CustomerDetails(
+                dto.getFirstName(),
+                dto.getLastName(),
                 EGender.valueOf(dto.getGender()),
                 dto.getAddressLine1(),
                 dto.getAddressLine2(),

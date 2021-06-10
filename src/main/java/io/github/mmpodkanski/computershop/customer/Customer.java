@@ -51,7 +51,7 @@ public class Customer implements UserDetails {
         this.enabled = true;
     }
 
-    void addInfo(CustomerDetails details) {
+    void addInfo(final CustomerDetails details) {
         this.details = details;
     }
 
