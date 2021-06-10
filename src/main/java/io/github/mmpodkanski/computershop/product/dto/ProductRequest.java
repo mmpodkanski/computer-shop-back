@@ -24,7 +24,7 @@ public class ProductRequest {
     ProductRequest() {
     }
 
-    ProductRequest(
+    public ProductRequest(
             @NotBlank final String name,
             @NotBlank final String description,
             final String code,
