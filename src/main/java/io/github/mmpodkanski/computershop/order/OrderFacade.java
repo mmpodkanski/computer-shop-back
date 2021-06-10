@@ -78,7 +78,7 @@ class OrderFacade {
             return orderFactory.toNewEntity(orderItemDto);
         }).collect(Collectors.toSet());
 
-        facade.deleteCartItems(customer);
+        facade.deleteAllCartItems(customer);
         var order = repository.save(new Order(
                 cart.getTotalCost(),
                 orderItems,
@@ -112,8 +112,8 @@ class OrderFacade {
         }
         List<SessionCreateParams.LineItem> sessionItemsList = new ArrayList<>();
 
-        String successURL = baseURL + "payment/success?orderId=" + orderId;
-        String failedURL = baseURL + "payment/failed?orderId="+ orderId;
+        String successURL = baseURL + "/payment/success?orderId=" + orderId;
+        String failedURL = baseURL + "/payment/failed?orderId="+ orderId;
         Stripe.apiKey = apiKey;
 
         order.getItems().forEach(e -> sessionItemsList.add(createSessionLineItem(e)));
@@ -142,7 +142,7 @@ class OrderFacade {
 
         switch (paymentStatus) {
             case ("unpaid"):
-                order.setStatus(EOrderStatus.CANCELLED);
+                order.setStatus(EOrderStatus.FAILED);
                 break;
             case ("paid"):
                 order.setStatus(EOrderStatus.PAID);

@@ -47,6 +47,7 @@ class OrderController {
     @PostMapping
     ResponseEntity<OrderDto> createOrder(@AuthenticationPrincipal Customer customer) {
         var result = facade.placeOrder(customer);
+        logger.info("Customer(id): " + customer.getId() + " created a new order!");
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -69,6 +70,7 @@ class OrderController {
             @PathVariable int id
     ) {
         facade.cancelOrder(customer, id);
+        logger.info("Customer(id): " + customer.getId() + " canceled order!");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

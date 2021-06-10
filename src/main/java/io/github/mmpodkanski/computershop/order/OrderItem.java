@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 
 @Entity
-@Table(name = "order_items")
+@Table(name = "items")
 class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
