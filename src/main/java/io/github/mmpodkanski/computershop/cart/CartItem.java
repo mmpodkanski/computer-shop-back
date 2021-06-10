@@ -43,7 +43,11 @@ class CartItem {
         this.customer = customer;
     }
 
-    public int getId() {
+    void decreaseQuantity() {
+        quantity--;
+    }
+
+    int getId() {
         return id;
     }
 
@@ -51,7 +55,7 @@ class CartItem {
         this.id = id;
     }
 
-    public Customer getCustomer() {
+    Customer getCustomer() {
         return customer;
     }
 
@@ -59,7 +63,7 @@ class CartItem {
         this.customer = customer;
     }
 
-    public Product getProduct() {
+    Product getProduct() {
         return product;
     }
 
@@ -67,11 +71,11 @@ class CartItem {
         this.product = product;
     }
 
-    public int getQuantity() {
+    int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(final int quantity) {
+    void setQuantity(final int quantity) {
         this.quantity = quantity;
     }
 

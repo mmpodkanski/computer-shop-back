@@ -2,9 +2,10 @@ package io.github.mmpodkanski.computershop.cart;
 
 import io.github.mmpodkanski.computershop.customer.Customer;
 import org.springframework.data.repository.Repository;
+import java.util.Optional;
 
 interface CartItemRepository extends Repository<CartItem, Integer> {
-    CartItem findById(int id);
+    Optional<CartItem> findById(int id);
 
     CartItem save(CartItem entity);
 

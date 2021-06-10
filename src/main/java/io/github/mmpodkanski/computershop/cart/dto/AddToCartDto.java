@@ -13,6 +13,12 @@ public class AddToCartDto {
     public AddToCartDto() {
     }
 
+    public AddToCartDto(final int id, final int productId, final int quantity) {
+        this.id = id;
+        this.productId = productId;
+        this.quantity = quantity;
+    }
+
     public int getId() {
         return id;
     }

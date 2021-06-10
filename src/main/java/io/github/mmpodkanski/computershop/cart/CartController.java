@@ -4,8 +4,6 @@ import io.github.mmpodkanski.computershop.cart.dto.AddToCartDto;
 import io.github.mmpodkanski.computershop.cart.dto.CartDto;
 import io.github.mmpodkanski.computershop.cart.dto.CartItemDto;
 import io.github.mmpodkanski.computershop.customer.Customer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/cart")
 class CartController {
-    private final Logger logger = LoggerFactory.getLogger(CartController.class);
     private final CartItemQueryRepository queryRepository;
     private final CartFacade facade;
 
@@ -48,15 +45,6 @@ class CartController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    ResponseEntity<Void> updateCartItem(
-            @Valid @RequestBody AddToCartDto addToCartDto,
-            @AuthenticationPrincipal Customer customer,
-            @PathVariable int id
-    ) {
-        facade.updateCartItem(addToCartDto, id, customer);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteItemCart(
@@ -71,7 +59,7 @@ class CartController {
     ResponseEntity<Void> deleteAllCarts(
             @AuthenticationPrincipal Customer customer
     ) {
-        facade.deleteCartItems(customer);
+        facade.deleteAllCartItems(customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
