@@ -1,6 +1,7 @@
 package io.github.mmpodkanski.computershop.customer.auth;
 
 import io.github.mmpodkanski.computershop.customer.AuthService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -26,6 +27,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
     private final AuthService authService;
     private final AuthEntryPointJwt unauthorizedHandler;
+
+    @Value("${BASE_URL}")
+    private String baseURL;
 
     WebSecurityConfig(
             @Lazy final AuthService authService,
@@ -60,7 +64,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcCo
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-                .allowedOrigins("http://localhost:8081")
+                .allowedOrigins(baseURL)
                 .allowedMethods("*")
                 .maxAge(3600L)
                 .allowedHeaders("*")
