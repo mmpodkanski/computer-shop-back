@@ -7,6 +7,7 @@ import io.github.mmpodkanski.computershop.customer.dto.LoginRequest;
 import io.github.mmpodkanski.computershop.customer.dto.RegisterRequest;
 import io.github.mmpodkanski.computershop.customer.enums.ERole;
 import io.github.mmpodkanski.computershop.exception.ApiBadRequestException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +26,7 @@ public class CustomerFacade {
     private final CustomerFactory factory;
 
     CustomerFacade(
-            final CustomerRepository repository,
+            @Qualifier("customerRepository") final CustomerRepository repository,
             final CustomerQueryRepository queryRepository,
             final AuthenticationManager authenticationManager,
             final PasswordEncoder encoder,
@@ -40,7 +41,7 @@ public class CustomerFacade {
         this.factory = factory;
     }
 
-    void signup(final RegisterRequest signUpRequest) {
+    void register(final RegisterRequest signUpRequest) {
         if (queryRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new ApiBadRequestException("Username is already taken!");
         }

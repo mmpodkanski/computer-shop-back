@@ -8,6 +8,7 @@ import io.github.mmpodkanski.computershop.exception.ApiNotFoundException;
 import io.github.mmpodkanski.computershop.product.Product;
 import io.github.mmpodkanski.computershop.product.ProductFactory;
 import io.github.mmpodkanski.computershop.product.ProductQueryRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ public class CartFacade {
     private final ProductFactory productFactory;
 
     CartFacade(
-            final CartItemRepository repository,
+            @Qualifier("cartItemRepository") final CartItemRepository repository,
             final CartItemQueryRepository queryRepository,
             final ProductQueryRepository productQueryRepository,
             final CartFactory cartFactory,
