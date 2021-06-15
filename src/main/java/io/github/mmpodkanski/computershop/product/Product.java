@@ -10,6 +10,7 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 @Entity
@@ -29,7 +30,7 @@ public class Product {
     private ECategory category;
     @NotNull(message = "Please type price of product!")
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    private double price;
+    private BigDecimal price;
     @Enumerated(EnumType.STRING)
     private ECondition condition = ECondition.NEW;
     private int quantity;
@@ -53,7 +54,7 @@ public class Product {
             final String description,
             final String code,
             final ECategory category,
-            final double price,
+            final BigDecimal price,
             final ECondition condition,
             final int quantity,
             final String imgLogoUrl
@@ -70,13 +71,13 @@ public class Product {
     }
 
     public void increaseStock(int q) {
-        for (int i=0; i<q; i++) {
+        for (int i = 0; i < q; i++) {
             quantity++;
         }
     }
 
     public void decreaseStock(int q) {
-        for (int i=0; i<q; i++) {
+        for (int i = 0; i < q; i++) {
             if (quantity > 0) {
                 quantity--;
             }
@@ -123,11 +124,11 @@ public class Product {
         this.category = category;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    void setPrice(double price) {
+    void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -176,7 +177,7 @@ public class Product {
             final String description,
             final String code,
             final ECategory category,
-            final double price,
+            final BigDecimal price,
             final ECondition condition,
             final int quantity,
             final String imgLogoUrl

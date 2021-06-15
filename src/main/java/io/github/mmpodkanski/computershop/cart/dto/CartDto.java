@@ -1,13 +1,14 @@
 package io.github.mmpodkanski.computershop.cart.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
 public class CartDto {
     private final List<CartItemDto> carts;
-    private final double totalCost;
+    private final BigDecimal totalCost;
 
-    public CartDto(final List<CartItemDto> carts, final double totalCost) {
+    public CartDto(final List<CartItemDto> carts, final BigDecimal totalCost) {
         this.carts = carts;
         this.totalCost = totalCost;
     }
@@ -16,7 +17,7 @@ public class CartDto {
         return carts;
     }
 
-    public  double getTotalCost() {
+    public BigDecimal getTotalCost() {
         return totalCost;
     }
 
@@ -25,7 +26,7 @@ public class CartDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartDto cartDto = (CartDto) o;
-        return Double.compare(cartDto.totalCost, totalCost) == 0 && Objects.equals(carts, cartDto.carts);
+        return Objects.equals(carts, cartDto.carts) && Objects.equals(totalCost, cartDto.totalCost);
     }
 
     @Override

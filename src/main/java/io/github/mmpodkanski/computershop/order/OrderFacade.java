@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,10 +69,10 @@ class OrderFacade {
                 new CartDto(
                         cartList,
                         cartList.stream().map(itemDto -> {
-                            double price = itemDto.getProduct().getPrice();
-                            return price * itemDto.getQuantity();
-                        }).reduce(0.0, Double::sum)
-                );
+                            BigDecimal price = itemDto.getProduct().getPrice();
+                            BigDecimal quantity = BigDecimal.valueOf(itemDto.getQuantity());
+                            return price.multiply(quantity);
+                        }).reduce(BigDecimal.ZERO, BigDecimal::add));
 
         var orderItems = cart.getCarts().stream().map(item -> {
             var orderItemDto = OrderItemDto.create(0, item.getQuantity(), item.getProduct().getPrice(), item.getProduct());
@@ -155,7 +156,7 @@ class OrderFacade {
     private SessionCreateParams.LineItem.PriceData createPriceData(OrderItem item) {
         return SessionCreateParams.LineItem.PriceData.builder()
                 .setCurrency("pln")
-                .setUnitAmount(((long) item.getPrice()) * 100)
+                .setUnitAmount((item.getPrice().longValue()) * 100)
                 .setProductData(
                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                 .setName(item.getProduct().getName())

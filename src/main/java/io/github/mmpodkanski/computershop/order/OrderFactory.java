@@ -1,6 +1,5 @@
 package io.github.mmpodkanski.computershop.order;
 
-import io.github.mmpodkanski.computershop.cart.dto.CartItemDto;
 import io.github.mmpodkanski.computershop.customer.CustomerFactory;
 import io.github.mmpodkanski.computershop.order.dto.OrderDto;
 import io.github.mmpodkanski.computershop.order.dto.OrderItemDto;

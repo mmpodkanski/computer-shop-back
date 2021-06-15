@@ -2,13 +2,14 @@ package io.github.mmpodkanski.computershop.order.dto;
 
 import io.github.mmpodkanski.computershop.customer.dto.CustomerDto;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public interface OrderDto {
     static OrderDto create(
             int id,
-            double totalCost,
-            Set<OrderItemDto>items,
+            BigDecimal totalCost,
+            Set<OrderItemDto> items,
             CustomerDto customer,
             String status
     ) {
@@ -17,7 +18,7 @@ public interface OrderDto {
 
     int getId();
 
-    double getTotalCost();
+    BigDecimal getTotalCost();
 
     Set<OrderItemDto> getItems();
 
@@ -27,12 +28,12 @@ public interface OrderDto {
 
     class OrderDtoImpl implements OrderDto {
         private final int id;
-        private final double totalCost;
-        private final Set<OrderItemDto>items;
+        private final BigDecimal totalCost;
+        private final Set<OrderItemDto> items;
         private final CustomerDto customer;
         private final String status;
 
-        public OrderDtoImpl(final int id, final double totalCost, final Set<OrderItemDto> items, final CustomerDto customer, final String status) {
+        public OrderDtoImpl(final int id, final BigDecimal totalCost, final Set<OrderItemDto> items, final CustomerDto customer, final String status) {
             this.id = id;
             this.totalCost = totalCost;
             this.items = items;
@@ -46,7 +47,7 @@ public interface OrderDto {
         }
 
         @Override
-        public double getTotalCost() {
+        public BigDecimal getTotalCost() {
             return totalCost;
         }
 

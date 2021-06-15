@@ -4,6 +4,7 @@ import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class ProductRequest {
@@ -16,7 +17,7 @@ public class ProductRequest {
     private String category;
     @NotNull(message = "Please type price of product!")
     @NumberFormat(style = NumberFormat.Style.CURRENCY)
-    private double price;
+    private BigDecimal price;
     private String condition;
     private int quantity;
     private String imgLogoUrl;
@@ -29,7 +30,7 @@ public class ProductRequest {
             @NotBlank final String description,
             final String code,
             @NotBlank final String category,
-            @NotNull final double price,
+            final BigDecimal price,
             final String condition,
             final int quantity,
             final String imgLogoUrl
@@ -60,7 +61,7 @@ public class ProductRequest {
         return category;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -81,7 +82,7 @@ public class ProductRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductRequest that = (ProductRequest) o;
-        return Double.compare(that.price, price) == 0 && quantity == that.quantity && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(code, that.code) && Objects.equals(category, that.category) && Objects.equals(condition, that.condition) && Objects.equals(imgLogoUrl, that.imgLogoUrl);
+        return quantity == that.quantity && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(code, that.code) && Objects.equals(category, that.category) && Objects.equals(price, that.price) && Objects.equals(condition, that.condition) && Objects.equals(imgLogoUrl, that.imgLogoUrl);
     }
 
     @Override

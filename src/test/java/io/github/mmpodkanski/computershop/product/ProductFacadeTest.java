@@ -8,6 +8,8 @@ import io.github.mmpodkanski.computershop.product.enums.ECondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,7 +30,7 @@ class ProductFacadeTest {
                 "description",
                 "code",
                 ECategory.CPU,
-                0,
+                BigDecimal.ZERO,
                 ECondition.NEW,
                 1,
                 null
@@ -39,7 +41,7 @@ class ProductFacadeTest {
                 "descriptionUpdated",
                 "codeUpdated",
                 "GPU",
-                0,
+                BigDecimal.ZERO,
                 "USED",
                 3,
                 null
@@ -73,7 +75,7 @@ class ProductFacadeTest {
                 "description",
                 "code",
                 ECategory.CPU,
-                0,
+                BigDecimal.ZERO,
                 ECondition.NEW,
                 1,
                 null
@@ -103,7 +105,7 @@ class ProductFacadeTest {
                 "description",
                 "code",
                 ECategory.CPU,
-                0,
+                BigDecimal.ZERO,
                 ECondition.NEW,
                 1,
                 null
@@ -133,7 +135,7 @@ class ProductFacadeTest {
                 "description",
                 "code",
                 ECategory.CPU,
-                0,
+                BigDecimal.ZERO,
                 ECondition.NEW,
                 1,
                 null

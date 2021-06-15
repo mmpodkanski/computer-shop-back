@@ -3,6 +3,8 @@ package io.github.mmpodkanski.computershop.product;
 import io.github.mmpodkanski.computershop.product.enums.ECategory;
 import io.github.mmpodkanski.computershop.product.enums.ECondition;
 
+import java.math.BigDecimal;
+
 class ProductInitializer {
     private final ProductQueryRepository queryRepository;
     private final ProductRepository repository;
@@ -20,7 +22,7 @@ class ProductInitializer {
                     "świetny procesor",
                     "AMD_ASDASDAS",
                     ECategory.CPU,
-                    123.3,
+                    BigDecimal.valueOf(123.3),
                     ECondition.NEW,
                     3,
                     null

@@ -7,6 +7,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 @Entity
@@ -20,7 +21,7 @@ class OrderItem {
     @NotNull
     private int quantity;
     @NotNull
-    private double price;
+    private BigDecimal price;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,7 +34,7 @@ class OrderItem {
     protected OrderItem() {
     }
 
-    OrderItem(final int quantity, final Product product, final double price) {
+    OrderItem(final int quantity, final Product product, final BigDecimal price) {
         this.quantity = quantity;
         this.product = product;
         this.price = price;
@@ -63,11 +64,11 @@ class OrderItem {
         this.product = product;
     }
 
-    double getPrice() {
+    BigDecimal getPrice() {
         return price;
     }
 
-    void setPrice(final double price) {
+    void setPrice(final BigDecimal price) {
         this.price = price;
     }
 

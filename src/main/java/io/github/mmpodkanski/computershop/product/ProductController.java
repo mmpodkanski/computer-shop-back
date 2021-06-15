@@ -31,7 +31,7 @@ class ProductController {
     ResponseEntity<List<ProductDto>> readAllProducts(@RequestParam(required = false, defaultValue = "0") int page) {
         logger.info("Displaying all the products!");
         var products = queryRepository
-                .findDtoAllBy(PageRequest.of(
+                .findAllDtoBy(PageRequest.of(
                                 page, 9,
                                 Sort.by("quantity").ascending().and(Sort.by("price")).ascending()
                 ));
@@ -42,7 +42,7 @@ class ProductController {
     ResponseEntity<List<ProductDto>> readAllProductsByCategory(@RequestParam String stringCategory) {
         logger.info("Displaying products by category: " + stringCategory);
         var category = ECategory.valueOf(stringCategory);
-        var products = queryRepository.findDtoAllByCategory(category);
+        var products = queryRepository.findAllDtoByCategory(category);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

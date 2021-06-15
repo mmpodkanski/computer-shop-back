@@ -9,9 +9,6 @@ import io.github.mmpodkanski.computershop.product.enums.ECondition;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class ProductFacade {
     private final ProductRepository repository;
@@ -25,26 +22,19 @@ public class ProductFacade {
     }
 
     ProductDto addProduct(ProductRequest product) {
-        var condition = ECondition.valueOf(product.getCondition());
         var category = ECategory.valueOf(product.getCategory());
 
-        List<Product> result = queryRepository.findAllByCode(product.getCode())
-                .stream()
-                .filter(pd -> pd.getCondition().equals(condition))
-                .collect(Collectors.toList());
+        Product result = queryRepository.findDtoByCode(product.getCode())
+                .filter(pd -> pd.getCondition().equals(product.getCondition()))
+                .map(productFactory::toEntity)
+                .orElseGet(() -> repository.save(productFactory.toEntity(product)));
 
-        if (result.size() > 1) {
-            throw new ApiBadRequestException("There is more than one product with the same code...");
-        } else if (result.size() == 0) {
-            return productFactory.toDto(repository.save(productFactory.toEntity(product)));
+
+        if (!result.getCategory().equals(category)) {
+            throw new ApiBadRequestException("You are trying to add product with the same code but in other category!");
         }
 
-        var foundProduct = result.get(0);
-        if (!foundProduct.getCategory().equals(category)) {
-            throw new ApiBadRequestException("You are trying add product with the same code but in other category!");
-        }
-
-        return updateProduct(product, foundProduct.getId());
+        return updateProduct(product, result.getId());
     }
 
     ProductDto updateProduct(ProductRequest request, int productId) {

@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -29,9 +30,10 @@ class CartController {
         List<CartItemDto> cartList = queryRepository.findAllByCustomerOrderByCreatedAtDesc(customer);
 
         var result = new CartDto(cartList, cartList.stream().map(cart -> {
-            double price = cart.getProduct().getPrice();
-            return price * cart.getQuantity();
-        }).reduce(0.0, Double::sum));
+            BigDecimal price = cart.getProduct().getPrice();
+            BigDecimal quantity = BigDecimal.valueOf(cart.getQuantity());
+            return price.multiply(quantity);
+        }).reduce(BigDecimal.ZERO, BigDecimal::add));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

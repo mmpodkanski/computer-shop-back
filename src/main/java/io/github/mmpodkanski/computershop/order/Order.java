@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private double totalCost;
+    private BigDecimal totalCost;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<OrderItem> items;
     @ManyToOne
@@ -37,7 +38,7 @@ class Order {
     }
 
     Order(
-            final double totalCost,
+            final BigDecimal totalCost,
             final Set<OrderItem> items,
             final Customer customer,
             final EOrderStatus status
@@ -60,11 +61,11 @@ class Order {
         this.id = id;
     }
 
-    double getTotalCost() {
+    BigDecimal getTotalCost() {
         return totalCost;
     }
 
-    void setTotalCost(final double totalCost) {
+    void setTotalCost(final BigDecimal totalCost) {
         this.totalCost = totalCost;
     }
 

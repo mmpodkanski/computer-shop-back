@@ -2,6 +2,8 @@ package io.github.mmpodkanski.computershop.product.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.math.BigDecimal;
+
 
 @JsonDeserialize(as = ProductDto.ProductDtoImpl.class)
 public interface ProductDto {
@@ -11,7 +13,7 @@ public interface ProductDto {
             final String description,
             final String code,
             final String category,
-            final double price,
+            final BigDecimal price,
             final String condition,
             final int quantity,
             final String imgLogoUrl
@@ -31,7 +33,7 @@ public interface ProductDto {
 
     String getCategory();
 
-    double getPrice();
+    BigDecimal getPrice();
 
     String getCondition();
 
@@ -46,7 +48,7 @@ public interface ProductDto {
         private final String description;
         private final String code;
         private final String category;
-        private final double price;
+        private final BigDecimal price;
         private final String condition;
         private final int quantity;
         private final String imgLogoUrl;
@@ -58,7 +60,7 @@ public interface ProductDto {
                 final String description,
                 final String code,
                 final String category,
-                final double price,
+                final BigDecimal price,
                 final String condition,
                 final int quantity,
                 final String imgLogoUrl
@@ -100,7 +102,7 @@ public interface ProductDto {
         }
 
         @Override
-        public double getPrice() {
+        public BigDecimal getPrice() {
             return price;
         }
 
